@@ -19,6 +19,7 @@
 ## ドキュメント
 
 - [設計書（MVP1）](./docs/design.md)
+- [リポジトリ譲渡と Vercel デプロイ手順](./docs/handover-and-vercel-deploy.md)（譲渡・受け取り・デプロイの手順）
 
 ## 開発
 
