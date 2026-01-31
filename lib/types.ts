@@ -19,3 +19,11 @@ export type Progress = {
   level: 0 | 1 | 2 | 3;
   lastReviewedAt: string;
 };
+
+/**
+ * 回答状況フラグ
+ * - mastered: 2連続で正解（覚えた）
+ * - unfixed: 1連続で正解（未定着）
+ * - learning: 直近不正解（学習中）
+ */
+export type WordStatus = "mastered" | "unfixed" | "learning" | null;

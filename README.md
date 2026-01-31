@@ -20,6 +20,7 @@
 
 - [設計書（MVP1）](./docs/design.md)
 - [リポジトリ譲渡と Vercel デプロイ手順](./docs/handover-and-vercel-deploy.md)（譲渡・受け取り・デプロイの手順）
+- [学習記録のエクスポート/インポート](./docs/progress-export.md)（GitHub に JSON で残す方法）
 
 ## 開発
 
