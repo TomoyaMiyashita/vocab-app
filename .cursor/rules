@@ -1,0 +1,47 @@
+# Vocab App 開発ルール
+
+## プロジェクト概要
+
+- フランス語単語帳 Web アプリ（MVP1）。将来的に他言語対応の拡張を想定する。
+- 設計・要件は `docs/design.md` を参照する。
+
+## 技術スタック（厳守）
+
+- **フレームワーク**: Next.js（App Router）, React, TypeScript
+- **UI**: Tailwind CSS, shadcn/ui（必要最小限のみ導入）
+- **状態管理**: Zustand
+- **永続化（MVP1）**: localStorage（将来 IndexedDB 移行を想定）
+- **デプロイ**: Vercel
+
+## データ型
+
+- 単語: `Word`（id, fr, ja, pos?, exampleFr?, exampleJa?）
+- 学習履歴: `Progress`（wordId, level: 0|1|2|3, lastReviewedAt）
+- 型定義は共通の `types/` または `lib/types.ts` に集約する。
+
+## フォルダ・構成方針
+
+- Next.js App Router に従う（`app/` 配下に page.tsx, layout.tsx 等）。
+- コンポーネントは `components/`、状態・ストアは `store/` または `lib/`、単語データは `data/` または `public/` の静的 JSON を想定。
+- 他言語対応を見据え、単語データや表示文言は「言語コード」で抽象化できるようにする（例: 単語の「外国語」フィールドを `primary` / `translation` などで汎用化する検討）。
+
+## MVP1 スコープ
+
+- **含める**: 単語一覧・詳細・学習フロー・理解度選択・localStorage 保存・今日の学習数・習得レベル表示。
+- **含めない**: ユーザー登録/ログイン、複数デバイス同期、課金、音声・発音判定、SRS（ spaced repetition ）アルゴリズム。
+
+## コード・品質
+
+- TypeScript を厳格に使用する（any は極力避ける）。
+- クライアント専用の処理（localStorage 等）は `"use client"` を付けたコンポーネントまたは専用モジュールで行う。
+- 単語データは静的 JSON から読み込み、編集は行わない（MVP1）。
+
+## 画面
+
+- Home: 今日の学習数 + 学習開始ボタン
+- Study: 単語カード + 答え表示 + 理解度ボタン（0/1/2）
+- Word List: 単語一覧 + 習得レベル表示
+
+## 参照
+
+- 詳細な要件・データ設計・ロードマップは `docs/design.md` を参照すること。
