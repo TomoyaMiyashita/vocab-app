@@ -4,19 +4,23 @@ import path from 'path';
 import { run } from '../lib/db.mjs';
 
 async function main() {
-  const migrationFile = path.resolve('db/migrations/001_create_tables.sql');
-  if (!fs.existsSync(migrationFile)) {
-    console.error('Migration file not found:', migrationFile);
+  const migrationsDir = path.resolve('db/migrations');
+  if (!fs.existsSync(migrationsDir)) {
+    console.error('Migrations dir not found:', migrationsDir);
     process.exit(2);
   }
-  const sql = fs.readFileSync(migrationFile, 'utf8');
+  const files = fs.readdirSync(migrationsDir).filter(f => f.endsWith('.sql')).sort();
   try {
-    console.log('Running migration...');
-    const statements = sql.split(/;\s*\n/).map(s => s.trim()).filter(Boolean);
-    for (const stmt of statements) {
-      await run(stmt);
+    console.log('Running migrations...');
+    for (const f of files) {
+      console.log('Applying', f);
+      const sql = fs.readFileSync(path.join(migrationsDir, f), 'utf8');
+      const statements = sql.split(/;\s*\n/).map(s => s.trim()).filter(Boolean);
+      for (const stmt of statements) {
+        await run(stmt);
+      }
     }
-    console.log('✅ Migration applied');
+    console.log('✅ Migrations applied');
   } catch (err) {
     console.error('Migration failed');
     console.error(err);

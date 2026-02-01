@@ -19,10 +19,11 @@
 ### progress
 - id INTEGER PRIMARY KEY AUTOINCREMENT
 - word_id TEXT NOT NULL (foreign key -> words.id)
+- user_id TEXT (nullable) (foreign key -> users.id)
 - level INTEGER NOT NULL
 - last_reviewed_at TEXT NOT NULL
 
-用途: 学習履歴を保存するためのテーブル。将来的に DB に移行可能。
+用途: 学習履歴を保存するためのテーブル。ユーザーごとに学習記録を保持するため `user_id` を追加しました。
 
 ## マイグレーション
 - `db/migrations/001_create_tables.sql` に DDL を保管しています。

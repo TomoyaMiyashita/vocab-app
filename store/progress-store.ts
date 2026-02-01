@@ -31,17 +31,29 @@ export const useProgressStore = create<ProgressState>()(
     (set, get) => ({
       items: [],
 
-      recordProgress(wordId, level) {
-        set((state) => ({
-          items: [
-            ...state.items,
-            {
-              wordId,
-              level,
-              lastReviewedAt: new Date().toISOString(),
-            },
-          ],
-        }));
+      async recordProgress(wordId, level) {
+        const entry = {
+          wordId,
+          level,
+          lastReviewedAt: new Date().toISOString(),
+        };
+        set((state) => ({ items: [...state.items, entry] }));
+        // try sync to server if user is authenticated
+        try {
+          const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+          if (token) {
+            await fetch('/api/progress', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+              },
+              body: JSON.stringify({ wordId, level }),
+            });
+          }
+        } catch (e) {
+          // ignore sync errors
+        }
       },
 
       getTodayCount() {
