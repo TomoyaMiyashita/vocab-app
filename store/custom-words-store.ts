@@ -1,55 +1,58 @@
 "use client";
 
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
 import type { Word } from "@/lib/types";
-
-const STORAGE_KEY = "vocab-app-custom-words";
 
 type CustomWordsState = {
   items: Word[];
-  addWord: (word: Omit<Word, "id">) => Word;
-  removeWord: (id: string) => void;
+  addWord: (word: Omit<Word, "id">) => Promise<Word | null>;
+  removeWord: (id: string) => Promise<boolean>;
+  init: () => Promise<void>;
 };
 
 function generateCustomId(): string {
   return `custom-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
-export const useCustomWordsStore = create<CustomWordsState>()(
-  persist(
-    (set, get) => ({
-      items: [],
+export const useCustomWordsStore = create<CustomWordsState>()((set, get) => ({
+  items: [],
 
-      addWord(word) {
-        const newWord: Word = {
-          ...word,
-          id: generateCustomId(),
-        };
-        set((state) => ({
-          items: [...state.items, newWord],
-        }));
-        return newWord;
-      },
-
-      removeWord(id) {
-        set((state) => ({
-          items: state.items.filter((w) => w.id !== id),
-        }));
-      },
-    }),
-    {
-      name: STORAGE_KEY,
-      storage: createJSONStorage(() =>
-        typeof window !== "undefined"
-          ? localStorage
-          : {
-              getItem: () => null,
-              setItem: () => {},
-              removeItem: () => {},
-            }
-      ),
-      skipHydration: true,
+  async init() {
+    try {
+      const res = await fetch('/api/words');
+      const data = await res.json();
+      // keep only custom words (isStatic=false)
+      const customs = data.filter((w: any) => !w.isStatic);
+      set({ items: customs });
+    } catch (err) {
+      // ignore
     }
-  )
-);
+  },
+
+  async addWord(word) {
+    try {
+      const res = await fetch('/api/words', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(word),
+      });
+      const created = await res.json();
+      set((state) => ({ items: [...state.items, created] }));
+      return created;
+    } catch (err) {
+      return null;
+    }
+  },
+
+  async removeWord(id) {
+    try {
+      await fetch(`/api/words?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+      });
+      set((state) => ({ items: state.items.filter((w) => w.id !== id) }));
+      return true;
+    } catch (err) {
+      return false;
+    }
+  },
+}));

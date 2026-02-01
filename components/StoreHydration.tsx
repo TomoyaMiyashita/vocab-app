@@ -5,12 +5,16 @@ import { useProgressStore } from "@/store/progress-store";
 import { useCustomWordsStore } from "@/store/custom-words-store";
 
 /**
- * クライアントで localStorage からストアを復元する（Next.js SSR 用）
+ * クライアントでストアを初期化する（Next.js SSR 用）
  */
 export function StoreHydration() {
   useEffect(() => {
-    useProgressStore.persist.rehydrate();
-    useCustomWordsStore.persist.rehydrate();
+    // keep progress rehydrate for now (client-local)
+    try {
+      useProgressStore.persist.rehydrate();
+    } catch (e) {}
+    // initialize custom words from server
+    useCustomWordsStore.getState().init();
   }, []);
   return null;
 }
