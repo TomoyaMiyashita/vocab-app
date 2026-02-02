@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db.mjs';
 import { verifyToken } from '@/lib/auth.mjs';
 
-function getUserIdFromAuth(req) {
+function getUserIdFromAuth(req: Request) {
   const auth = req.headers.get('authorization') || '';
   const m = auth.match(/^Bearer (.+)$/);
   if (!m) return null;
