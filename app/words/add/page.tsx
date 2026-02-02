@@ -22,16 +22,20 @@ export default function AddWordPage() {
   const [exampleFr, setExampleFr] = useState("");
   const [exampleJa, setExampleJa] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fr.trim() || !ja.trim()) return;
-    addWord({
+    const created = await addWord({
       fr: fr.trim(),
       ja: ja.trim(),
       ...(pos && { pos }),
       ...(exampleFr.trim() && { exampleFr: exampleFr.trim() }),
       ...(exampleJa.trim() && { exampleJa: exampleJa.trim() }),
     });
+    if (!created) {
+      // handle error (simple)
+      return;
+    }
     setFr("");
     setJa("");
     setPos(undefined);
