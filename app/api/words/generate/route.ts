@@ -3,8 +3,8 @@ import { SEEDS } from '@/lib/word-seeds';
 import { translate } from '@/lib/translate.mjs';
 import { db } from '@/lib/db.mjs';
 
-function pickWords(seedList, count) {
-  const out = [];
+function pickWords(seedList: string[], count: number) {
+  const out: string[] = [];
   const shuffled = [...seedList].sort(() => Math.random() - 0.5);
   for (let i = 0; i < count; i++) {
     out.push(shuffled[i % shuffled.length]);
