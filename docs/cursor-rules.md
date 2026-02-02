@@ -12,6 +12,10 @@
   - `npx vercel --prod` を使ってデプロイして本番環境でのビルド/ランタイムを確認できます（事前に `vercel login` が必要）。
   - 注意: `npx vercel --prod` は実際に本番へデプロイするコマンドです。実行前に必ず意図を確認してください。
 
+- **Vercel のプロダクション環境変数を確認すること** ⚠️
+  - 本番で必要な環境変数（例: `TURSO_DB_URL`, `TURSO_DB_AUTH_TOKEN`, `JWT_SECRET`, `BETTER_AUTH_SECRET`）が Vercel の Project Settings の Environment Variables に設定されていることを事前に確認してください。
+  - これらが設定されていないと、Vercel のビルド時に `Missing ... environment variables` のエラーでビルドが失敗します。
+
 - **CI でのビルドチェックを必須にすること** ✅
   - プルリクエストで `npm run build` を実行するワークフローを追加しています（`.github/workflows/ci-build.yml`）。これはVercel上のビルドに先んじて問題を検出するための安全策です。 
 
