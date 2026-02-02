@@ -282,4 +282,9 @@ vercel --prod
 - [ ] GitHub で招待を承認（collaborator）
 - [ ] Vercel でリポジトリをインポートしてデプロイ（8. 方法 A）、または CLI でデプロイ（8. 方法 B）
 
+---
+
+## 開発ルール（Cursor Rules）
+本リポジトリでは、デプロイやビルドに関わる変更を push する前にローカルでのビルド確認を必須としています。詳細は `docs/cursor-rules.md` を参照してください。
+
 以上で、譲渡から Vercel での公開まで一通り完了です。
